@@ -1,0 +1,491 @@
+﻿@using TheSlice.Models
+@model ShopModel
+@{
+    ViewBag.Title = "Shop Page";
+}
+
+<body>
+
+    <div class="ajax-loading-block-window" style="display: none">
+    </div>
+    <div id="dialog-notifications-success" title="Notification" style="display:none;">
+    </div>
+    <div id="dialog-notifications-error" title="Error" style="display:none;">
+    </div>
+    <div id="dialog-notifications-warning" title="Warning" style="display:none;">
+    </div>
+    <div id="bar-notification" class="bar-notification">
+        <span class="close" title="Close">&nbsp;</span>
+    </div>
+
+    <div class="master-wrapper-page">
+
+        <div class="header">
+            <div class="header-upper">
+                <div class="header-selectors-wrapper">
+                    <div class="currency-selector">
+                        <select id="customerCurrency" name="customerCurrency" onchange="setLocation(this.value);">
+                            <option selected="selected" value="/changecurrency/1?returnurl=%2f">LKR</option>
+               
+                        </select>
+                        
+                    </div>
+
+                </div>
+                <div class="header-links-wrapper">
+                    <div class="header-links">
+                        <ul>
+                            @if (Model.headerDetails != null)
+                            {
+                                <li><a href="/Home/Logout?FormId=2" class="ico-login">@Model.headerDetails.FullName-Logout</a></li>
+                            }
+                            else {
+                                <li><a href="/Home/Register?FormId=2" class="ico-register">Register</a></li>
+                                <li><a href="/Home/Login?FormId=2" class="ico-login">Log in</a></li>
+                            }
+
+
+                            <li>
+                                <a href="/Wishlist" class="ico-wishlist">
+                                    <span class="wishlist-label">Wishlist</span>
+                                    @if ((Model.headerDetails != null))
+                                    {
+                                        if ((Model.headerDetails.wishListCount != 0))
+                                        {
+                                            <span class="wishlist-qty">(@Model.headerDetails.wishListCount)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="wishlist-qty">(0)</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="wishlist-qty">(0)</span>
+                                    }
+                                </a>
+                            </li>
+                            <li id="topcartlink">
+                                <a href="/ShoppingCart" class="ico-cart">
+                                    <span class="cart-label">Shopping cart</span>
+                                    @if ((Model.headerDetails != null))
+                                    {
+                                        if ((Model.headerDetails.cart.Count != 0))
+                                        {
+                                            <span class="cart-qty">(@Model.headerDetails.cart.Count)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="cart-qty">(0)</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="cart-qty">(0)</span>
+                                    }
+                                </a>
+                            </li>
+                            </ul>
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('.header').on('mouseenter', '#topcartlink', function () {
+                                        $('#flyout-cart').addClass('active');
+                                    });
+                                    $('.header').on('mouseleave', '#topcartlink', function () {
+                                        $('#flyout-cart').removeClass('active');
+                                    });
+                                    $('.header').on('mouseenter', '#flyout-cart', function () {
+                                        $('#flyout-cart').addClass('active');
+                                    });
+                                    $('.header').on('mouseleave', '#flyout-cart', function () {
+                                        $('#flyout-cart').removeClass('active');
+                                    });
+                                });
+
+                            </script>
+</div>
+
+                    @if ((Model.headerDetails != null))
+                    {
+                        if ((Model.headerDetails.cart.Count != 0))
+                        {
+                            <div id="flyout-cart" class="flyout-cart">
+                                <div class="mini-shopping-cart">
+                                    <div class="count">
+                                        There are <a href="/ShoppingCart">@Model.headerDetails.cart.Count item(s)</a> in your cart.
+                                    </div>
+                                    <div class="items">
+                                        @foreach (var item in Model.headerDetails.cart.CartItemList)
+                                        {
+                                            <div class="item">
+                                                @if ((@item.ImageUrl != null) & (@item.ImageUrl != ""))
+                                                {
+                                                    <div class="picture">
+                                                        <a href="/ShoppingCart" title="@item.Name">
+                                                            <img alt="@item.Name" src="@item.ImageUrl" title="@item.Name" />
+                                                        </a>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="picture">
+                                                        <a href="/ShoppingCart" title="">
+                                                            <img alt="" src="http://localhost:6051/Content/Images/noimage.jpg" title="" />
+                                                        </a>
+                                                    </div>
+                                                }
+
+                                                <div class="product">
+                                                    <div class="name">
+                                                        <a href="/ShoppingCart">@item.Name</a>
+                                                    </div>
+                                                    <div class="price">Unit price: <span>Rs @item.Price</span></div>
+                                                    <div class="quantity">Quantity: <span>@item.Qty</span></div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                    <div class="totals">Sub-Total: <strong>Rs @Model.headerDetails.cart.SubTotal</strong></div>
+                                    <div class="buttons">
+                                        <input type="button" value="Go to cart" class="button-1 cart-button" onclick="setLocation('/ShoppingCart')" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="flyout-cart" class="flyout-cart">
+                                <div class="mini-shopping-cart">
+                                    <div class="count">
+                                        You have no items in your shopping cart.
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    else
+                    {
+                        <div id="flyout-cart" class="flyout-cart">
+                            <div class="mini-shopping-cart">
+                                <div class="count">
+                                    You have no items in your shopping cart.
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <div class="header-lower">
+                <div class="header-logo">
+                    <a href="/">
+                        <img title="" alt="Your store name" src="http://localhost:6051/Themes/DefaultClean/Content/images/logo.png">
+                    </a>
+                </div>
+                <div class="search-box store-search-box">
+                    <form action="/search" id="small-search-box-form" method="get">
+                        <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="Search store" />
+                        <input type="submit" class="button-1 search-box-button" value="Search" />
+
+                        <script type="text/javascript">
+            $("#small-search-box-form").submit(function(event) {
+                if ($("#small-searchterms").val() == "") {
+                    alert('Please enter some search keyword');
+                    $("#small-searchterms").focus();
+                    event.preventDefault();
+                }
+            });
+                        </script>
+
+                        <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#small-searchterms').autocomplete({
+                            delay: 500,
+                            minLength: 3,
+                            source: '/catalog/searchtermautocomplete',
+                            appendTo: '.search-box',
+                            select: function(event, ui) {
+                                $("#small-searchterms").val(ui.item.label);
+                                setLocation(ui.item.producturl);
+                                return false;
+                            }
+                        })
+                        .data("ui-autocomplete")._renderItem = function(ul, item) {
+                            var t = item.label;
+                            //html encode
+                            t = htmlEncode(t);
+                            return $("<li></li>")
+                                .data("item.autocomplete", item)
+                                .append("<a><span>" + t + "</span></a>")
+                                .appendTo(ul);
+                        };
+                });
+                        </script>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+        </script>
+        <div class="header-menu">
+            <ul class="top-menu">
+                <li>
+                    <a href="/">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/Shop">
+                        Shop
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/">
+                        About
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/">
+                        FAQ
+                    </a>
+
+                </li>
+                <li>
+                    <a href="/">
+                        Contact Us
+                    </a>
+
+                </li>
+
+            </ul>
+
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.menu-toggle').click(function () {
+                        $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                    });
+                    $('.top-menu.mobile .sublist-toggle').click(function () {
+                        $(this).siblings('.sublist').slideToggle('slow');
+                    });
+                });
+            </script>
+
+
+        </div>
+
+
+        <div class="product-collateral">
+            <!--associated products-->
+            <div class="product-variant-list">
+                @foreach (var variant in Model.ProductList)
+            {
+                    <div class="product-variant-line" data-productid="@variant.Id">
+                        @if (!String.IsNullOrWhiteSpace(variant.ImageUrl))
+                        {
+                            <div class="variant-picture">
+                                <img alt="@variant.AlternateText" src="@variant.ImageUrl"
+                                     title="@variant.Title" id="main-product-img-@variant.Id" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="variant-picture">
+                                <img alt="" src="http://localhost:6051/Content/Images/noimage.jpg"
+                                     title="" id="main-product-img" />
+                            </div>
+                        }
+                        <div class="col-md-6 variant-overview">
+                            @if (!String.IsNullOrWhiteSpace(variant.Name))
+                            {
+                                <div class="variant-name">
+                                    @variant.Name
+                                </div>
+                            }
+                            
+                            <!--availability-->
+                            <div class="availability">
+                                @if (!String.IsNullOrWhiteSpace(variant.StockAvailability))
+                                {
+                                    <div class="stock">
+                                        <span class="label" style="color:black;font-size:100%;padding:0em;">Availability:</span>
+                                        <span class="value" id="stock-availability-value-@variant.Id">@variant.StockAvailability</span>
+                                    </div>
+                                }
+                            </div>
+                            <!--SKU, MAN, GTIN, vendor-->
+                            <div class="additional-details">
+                                <div class="sku">
+                                    <span class="label" style="color:black;font-size:100%;padding:0em;">SKU:</span>
+                                    <span class="value" itemprop="sku" id="sku-@variant.Id">@variant.Sku</span>
+                                </div>
+                            </div>
+
+                            <!--attributes-->
+                            <!--price & add to cart-->
+                            <div class="prices" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                                <div class="product-price">
+                                    <span itemprop="price" content="@variant.Price" class="price-value-@variant.Id">
+                                        Rs @variant.Price
+                                    </span>
+                                </div>
+                                <meta itemprop="priceCurrency" content="USD" />
+                            </div>
+
+                            <!--price breaks-->
+
+                            <div class="add-to-cart">
+                                <div class="add-to-cart-panel">
+                                    <label class="qty-label" for="addtocart_EnteredQuantity_@variant.Id">Qty:</label>
+                                    <input class="qty-input" data-val="true" data-val-number="The field Qty must be a number." id="addtocart_EnteredQuantity_@variant.Id" name="addtocart_EnteredQuantity_@variant.Id" type="text" value="1" />
+                                       
+                                     <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                $("#addtocart_EnteredQuantity_@variant.Id").keydown(function (event) {
+                                                    if (event.keyCode == 13) {
+                                                        $("#add-to-cart-button-@variant.Id").click()
+                                                        return false;
+                                                    }
+                                                });
+                                            });
+                                        </script>
+
+                                    <input type="button" id="add-to-cart-button-@variant.Id" class="button-1 add-to-cart-button" value="Add to cart" data-productid="@variant.Id" onclick="AjaxCart.addproducttocart_details('/ShoppingCart/AddProductToCart_Details',@variant.Id,1, '#product-details-form');return false;" />
+
+                                </div>
+
+                            </div>
+
+                            <div class="add-to-wishlist">
+                                <input type="button" id="add-to-wishlist-button-@variant.Id" class="button-2 add-to-wishlist-button" value="Add to wishlist" data-productid="@variant.Id" onclick="AjaxCart.addproducttocart_details('/ShoppingCart/AddProductToCart_Details',@variant.Id,2, '#product-details-form');return false;" />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            @if (!String.IsNullOrWhiteSpace(variant.ShortDescription))
+                            {
+
+                                <div class="col-md-6 variant-description">
+                                    <span style="color:#777;font-weight:bold;">About the product:</span>
+                                    @Html.Raw(variant.ShortDescription)
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                }
+
+                @if (Model.ProductList.Count() == 0)
+                {
+                    <div class="no-associated-products">
+                        No products in the shop
+                    </div>
+                }
+            </div>
+
+        </div>
+
+
+        <div class="footer">
+            <div class="footer-upper">
+                <div class="footer-block information">
+                    <div class="title">
+                        <strong>Information</strong>
+                    </div>
+                    <ul class="list">
+                        <li><a href="/Shop">Privacy notice</a></li>
+                        <li><a href="/Shop">Conditions of Use</a></li>
+                    </ul>
+                </div>
+                <div class="footer-block customer-service">
+                    <div class="title">
+                        <strong>Customer service</strong>
+                    </div>
+                    <ul class="list">
+                        <li><a href="/Shop">News</a></li>
+                        <li><a href="/Shop">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-block my-account">
+                    <div class="title">
+                        <strong>My account</strong>
+                    </div>
+                    <ul class="list">
+                        <li><a href="/Shop">My account</a></li>
+                        <li><a href="/Shop">Shopping cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-block follow-us">
+                    <div class="social">
+                        <div class="title">
+                            <strong>Follow us</strong>
+                        </div>
+                        <ul class="networks">
+                            <li class="facebook"><a href="http://www.facebook.com/" target="_blank">Facebook</a></li>
+                            <li class="twitter"><a href="https://twitter.com/" target="_blank">Twitter</a></li>
+                            <li class="youtube"><a href="http://www.youtube.com/" target="_blank">YouTube</a></li>
+                            <li class="google-plus"><a href="https://plus.google.com/" target="_blank">Google+</a></li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="footer-lower">
+                <div class="footer-info">
+                    <span class="footer-disclaimer">Copyright &copy; 2017 The Slice. All rights reserved.</span>
+                </div>
+                <div class="footer-powered-by">
+
+                    Powered by <a href="http://localhost:6051/">The Slice</a>
+                </div>
+
+            </div>
+
+        </div>
+        <script type="text/javascript">
+    $(document).ready(function () {
+        $('.footer-block .title').click(function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 769) {
+                $(this).siblings('.list').slideToggle('slow');
+            }
+        });
+    });
+        </script>
+
+        <script type="text/javascript">
+    $(document).ready(function () {
+        $('.block .title').click(function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 1001) {
+                $(this).siblings('.listbox').slideToggle('slow');
+            }
+        });
+    });
+        </script>
+    </div>
+
+
+
+</body>
+
+

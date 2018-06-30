@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Admin Login";
+}
+<div class="container body-content">
+
+    <div class="container body-content">
+
+        <h2>Admin Login.</h2>
+        <script src="/Scripts/apps/Admin.js" type="text/javascript"></script>
+        <div class="row">
+            <div class="col-md-8">
+                <section id="loginForm">
+                    <div class="form-horizontal">
+                        <form action="/Home/Login" id="FrmLogin" method="post">
+                            <h4>Use a admin account to log in.</h4>
+                            <hr />
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="Email">Email</label>
+                                <div class="col-md-10">
+                                    <input data-val="true" data-val-number="The field FormId must be a number." data-val-required="The FormId field is required." id="FormId" name="FormId" type="hidden" value="1" />
+                                    <input class="form-control" id="email" name="Email" type="text" value="" verrormsg="Email is required and should be valid!" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="Password">Password</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" id="password" name="Password" type="password" verrormsg="Password is required!" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="button" value="Log in" class="btn btn-default" id="login" />
+                                </div>
+                            </div>
+
+                            <p>
+                                <a href="/">Back to Home Page</a>
+                            </p>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

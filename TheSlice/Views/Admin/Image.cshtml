@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Image";
+    Layout = "_SuperAdmin.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        selectmenu(2);
+    });
+</script>
+
+
+<div class="col-md-12" style="padding-left: 45px !important;padding-right: 45px !important">
+    <h1>Image</h1>
+        <div class="row">
+            @using (Html.BeginForm("FileUpload", "Admin", FormMethod.Post,
+                                                                new { enctype = "multipart/form-data" }))
+            {
+                <label for="file">Upload Image</label>
+                <input type="file" name="file" id="file" style="width: 100%;" />
+                <input type="submit" value="Upload" class="submit" />
+            }
+        </div>
+</div>

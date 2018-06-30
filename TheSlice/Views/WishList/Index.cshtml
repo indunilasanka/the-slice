@@ -1,0 +1,302 @@
+﻿@model IEnumerable<TheSlice.Models.wishListItem>
+@{
+    ViewBag.Title = "Wishlist";
+}
+
+<body>
+    <div class="master-wrapper-page">
+        <div class="header">
+            <div class="header-lower">
+                <div class="header-logo">
+                    <a href="/">
+                        <img title="" alt="Your store name" src="http://localhost:6051/Themes/DefaultClean/Content/images/logo.png">
+                    </a>
+                </div>
+                <div class="search-box store-search-box">
+                    <form action="/search" id="small-search-box-form" method="get">
+                        <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="Search store" />
+                        <input type="submit" class="button-1 search-box-button" value="Search" />
+
+                        <script type="text/javascript">
+                            $("#small-search-box-form").submit(function (event) {
+                                if ($("#small-searchterms").val() == "") {
+                                    alert('Please enter some search keyword');
+                                    $("#small-searchterms").focus();
+                                    event.preventDefault();
+                                }
+                            });
+                        </script>
+
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#small-searchterms').autocomplete({
+                                    delay: 500,
+                                    minLength: 3,
+                                    source: '/catalog/searchtermautocomplete',
+                                    appendTo: '.search-box',
+                                    select: function (event, ui) {
+                                        $("#small-searchterms").val(ui.item.label);
+                                        setLocation(ui.item.producturl);
+                                        return false;
+                                    }
+                                })
+                                    .data("ui-autocomplete")._renderItem = function (ul, item) {
+                                        var t = item.label;
+                                        //html encode
+                                        t = htmlEncode(t);
+                                        return $("<li></li>")
+                                            .data("item.autocomplete", item)
+                                            .append("<a><span>" + t + "</span></a>")
+                                            .appendTo(ul);
+                                    };
+                            });
+                        </script>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    <script type="text/javascript">
+        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+    </script>
+    <div class="header-menu">
+        <ul class="top-menu">
+            <li>
+                <a href="/">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="/Shop">
+                    Shop
+                </a>
+            </li>
+
+            <li>
+                <a href="/">
+                    About
+                </a>
+            </li>
+
+            <li>
+                <a href="/">
+                    FAQ
+                </a>
+
+            </li>
+            <li>
+                <a href="/">
+                    Contact Us
+                </a>
+
+            </li>
+
+        </ul>
+
+
+        <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.menu-toggle').click(function () {
+                        $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                    });
+                    $('.top-menu.mobile .sublist-toggle').click(function () {
+                        $(this).siblings('.sublist').slideToggle('slow');
+                    });
+                });
+        </script>
+
+    </div>
+
+        @if (Model.Count() != 0)
+        {
+
+        <div class="master-wrapper-content">
+
+
+            <div class="master-column-wrapper">
+
+                <div class="center-1">
+
+
+                    <div class="page wishlist-page">
+                        <div class="page-title">
+                            <h1>
+                                Wishlist
+                            </h1>
+                        </div>
+                        <div class="page-body">
+                            <div class="wishlist-content">
+                                <form action="/wishlist" method="post">
+                                    <div class="table-wrapper">
+                                        <table class="cart">
+                                            <colgroup>
+                                                <col width="1" />
+                                                <col width="1" />
+                                                <col width="1" />
+                                                <col width="1" />
+                                                <col />
+                                                <col width="1" />
+                                                <col width="1" />
+                                                <col width="1" />
+                                            </colgroup>
+                                            <thead>
+                                                <tr>
+                                                    <th class="remove-from-cart">
+                                                        Remove
+                                                    </th>                                   
+                                                    <th class="sku">
+                                                        SKU
+                                                    </th>
+                                                    <th class="product-picture">
+                                                        Image
+                                                    </th>
+                                                    <th class="product">
+                                                        Product
+                                                    </th>
+                                                    <th class="unit-price">
+                                                        Price
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tr>
+                                                        <td class="remove-from-cart">
+                                                            <label class="td-title">Remove:</label>
+                                                            <input type="button" id="delete-wish-@item.Id" class="button" value="Delete" data-productid="@item.Id" onclick="AjaxCart.DeleteWish('/ShoppingCart/DeleteWish','@item.Id');return false;" />
+                                                        </td>                                                  
+                                                        <td class="sku">
+                                                            <label class="td-title">SKU:</label>
+                                                            <span class="sku-number">@item.Sku</span>
+                                                        </td>
+                                                        <td class="product-picture">
+                                                            <a href="/WishList"><img alt="" src=@item.ImageUrl title="" /></a>
+                                                        </td>
+                                                        <td class="product">
+                                                            <a href="/WishList" class="product-name">@item.Name</a>
+                                                        </td>
+                                                        <td class="unit-price">
+                                                            <label class="td-title">Price:</label>
+                                                            <span class="product-unit-price">@item.Price</span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        }
+
+        else
+        {
+            <span style="line-height:5;">You have no items in the wishlist or you haven't logged-in to the system.</span>
+            
+        }
+
+
+        <div class="footer">
+            <div class="footer-upper">
+                <div class="footer-block information">
+                    <div class="title">
+                        <strong>Information</strong>
+                    </div>
+                    <ul class="list">
+                        <li><a href="/WishList">Privacy notice</a></li>
+                        <li><a href="/WishList">Conditions of Use</a></li>
+                    </ul>
+                </div>
+                <div class="footer-block customer-service">
+                    <div class="title">
+                        <strong>Customer service</strong>
+                    </div>
+                    <ul class="list">
+                        <li><a href="/WishList">News</a></li>
+                        <li><a href="/WishList">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-block my-account">
+                    <div class="title">
+                        <strong>My account</strong>
+                    </div>
+                    <ul class="list">
+                        <li><a href="/WishList">My account</a></li>
+                        <li><a href="/WishList">Shopping cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-block follow-us">
+                    <div class="social">
+                        <div class="title">
+                            <strong>Follow us</strong>
+                        </div>
+                        <ul class="networks">
+                            <li class="facebook"><a href="http://www.facebook.com/" target="_blank">Facebook</a></li>
+                            <li class="twitter"><a href="https://twitter.com/" target="_blank">Twitter</a></li>
+                            <li class="youtube"><a href="http://www.youtube.com/" target="_blank">YouTube</a></li>
+                            <li class="google-plus"><a href="https://plus.google.com/" target="_blank">Google+</a></li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="footer-lower">
+                <div class="footer-info">
+                    <span class="footer-disclaimer">Copyright &copy; 2017 The Slice. All rights reserved.</span>
+                </div>
+                <div class="footer-powered-by">
+
+                    Powered by <a href="http://localhost:6051/">The Slice</a>
+                </div>
+
+            </div>
+
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.footer-block .title').click(function () {
+                    var e = window, a = 'inner';
+                    if (!('innerWidth' in window)) {
+                        a = 'client';
+                        e = document.documentElement || document.body;
+                    }
+                    var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+                    if (result.width < 769) {
+                        $(this).siblings('.list').slideToggle('slow');
+                    }
+                });
+            });
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.block .title').click(function () {
+                    var e = window, a = 'inner';
+                    if (!('innerWidth' in window)) {
+                        a = 'client';
+                        e = document.documentElement || document.body;
+                    }
+                    var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+                    if (result.width < 1001) {
+                        $(this).siblings('.listbox').slideToggle('slow');
+                    }
+                });
+            });
+        </script>
+    </div>
+
+
+</body>
+

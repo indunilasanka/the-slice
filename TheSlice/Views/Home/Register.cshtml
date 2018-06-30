@@ -1,0 +1,63 @@
+﻿@model TheSlice.Models.User
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<script src="~/Scripts/apps/Home.js"></script>
+
+@using (Html.BeginForm("Register", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" , Id="FrmReg"}))
+{
+  
+    <h4>Create a new account.</h4>
+    <hr />
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Email, new { verrormsg = "Email is required and should be valid!", @class = "form-control" , Id = "Email" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FullName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.FullName, new { verrormsg = "Full name is required!", @class = "form-control" , Id = "FullName"})
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Address, new { verrormsg = "Address is required!", @class = "form-control", Id = "Address" })
+            @Html.HiddenFor(m => m.FormId, new { @class = "form-control" , Id= "FormIdReg" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.Password, new { verrormsg = "Password is required!", @class = "form-control", Id = "Password" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { verrormsg = "Confirmation should be match with password!!", @class = "form-control", Id = "ConPassword" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" class="btn btn-default" value="Register" id="btnreg" />
+        </div>
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Back to Home Page", "Index", "Home")
+</p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

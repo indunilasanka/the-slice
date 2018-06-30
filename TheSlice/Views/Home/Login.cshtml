@@ -1,0 +1,56 @@
+﻿@using TheSlice.Models
+@model User
+@{
+    ViewBag.Title = "Log in";
+}
+
+<h2>@ViewBag.Title.</h2>
+<script src="~/Scripts/apps/Home.js" type="text/javascript"></script>
+<div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            <div class="form-horizontal">
+            @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { id = "FrmLogin" }))
+            {
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.HiddenFor(m => m.FormId, new { id = "FormId" })
+                        @Html.TextBoxFor(m => m.Email, new { verrormsg = "Email is required and should be valid!", @class = "form-control", id = "email" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(m => m.Password, new { verrormsg = "Password is required!", @class = "form-control", id = "password" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="Log in" class="btn btn-default" id="login" />
+                    </div>
+                </div>
+                <p>
+                    @Html.ActionLink("Register as a new user", "Register",new { FormId = Model.FormId})
+                </p>
+                <p>
+                    @Html.ActionLink("Back to Home Page", "Index","Home")
+                </p>
+
+            }
+            </div>
+        </section>
+    </div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
